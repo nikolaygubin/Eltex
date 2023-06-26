@@ -1,5 +1,8 @@
 #include "func.h"
 
+size_t book_capacity = 1;
+size_t book_size = 0;
+
 const char menu_text[] =
     "-Add user : press 'a'\n-Delete user : press d\n-Find user : press "
     "f\n-Print users : press p\n-Quit : press q\n";
@@ -8,34 +11,33 @@ void print_menu() { write(1, menu_text, strlen(menu_text)); }
 
 void clear_scrin() { write(1, "\E[H\E[J", strlen("\E[H\E[J")); }
 
-void add_user(Person *phone_book) {
+void add_user(Person **phone_book) {
   set_term_regime(0, 2, 20, 1, 0);
 
   int free_index = 0;
-  for (; free_index < SIZE; free_index++) {
-    if (!strcmp(phone_book[free_index].first_name, "\0") ||
-        !strcmp(phone_book[free_index].last_name, "\0") ||
-        !strcmp(phone_book[free_index].number, "\0"))
+  for (; free_index < book_capacity; free_index++) {
+    if (!strcmp((*phone_book)[free_index].first_name, "\0") ||
+        !strcmp((*phone_book)[free_index].last_name, "\0") ||
+        !strcmp((*phone_book)[free_index].number, "\0"))
       break;
   }
-  if (free_index == SIZE) {
-    clear_scrin();
-    write(1, "Phone book is overflow!", strlen("Phone book is overflow!"));
-    sleep(1);
-    return;
+  if (free_index == book_capacity) {
+    book_capacity *= 2;
+    *phone_book = realloc(*phone_book, book_capacity * sizeof(Person));
   }
 
   write(1, "Enter first name : ", strlen("Enter first name : "));
-  scanf("%s", phone_book[free_index].first_name);
+  scanf("%s", (*phone_book)[free_index].first_name);
 
   write(1, "Enter last name : ", strlen("Enter last name : "));
-  scanf("%s", phone_book[free_index].last_name);
+  scanf("%s", (*phone_book)[free_index].last_name);
 
   write(1, "Enter number : ", strlen("Enter number : "));
-  scanf("%s", phone_book[free_index].number);
+  scanf("%s", (*phone_book)[free_index].number);
 
   write(1, "Contact succefully add!\nPress any to back to menu",
         strlen("Contact succefully add!\nPress any to back to menu"));
+  book_size++;
 
   set_term_regime(0, 0, 1, 0, 0);
 
@@ -44,7 +46,7 @@ void add_user(Person *phone_book) {
 }
 
 void remove_user(Person *phone_book) {
-  for (int i = 0; i < SIZE; i++) {
+  for (int i = 0; i < book_capacity; i++) {
     if (phone_book[i].first_name[0] != '\0' ||
         phone_book[i].last_name[0] != '\0' || phone_book[i].number[0] != '\0') {
       char user[150];
@@ -59,7 +61,7 @@ void remove_user(Person *phone_book) {
 
   char number;
   read(1, &number, 1);
-  if (isdigit(number) && number > '0' && number - '0' <= SIZE) {
+  if (isdigit(number) && number > '0' && number - '0' <= book_capacity) {
     phone_book[number - '0' - 1].first_name[0] = '\0';
     phone_book[number - '0' - 1].last_name[0] = '\0';
     phone_book[number - '0' - 1].number[0] = '\0';
@@ -87,12 +89,13 @@ void remove_user(Person *phone_book) {
 
 void find_user(Person *phone_book) {
   set_term_regime(0, 2, 20, 1, 0);
-  
-  write(1, "Enter first name to find : ", strlen("Enter first name to find : "));
+
+  write(1,
+        "Enter first name to find : ", strlen("Enter first name to find : "));
   char first_name[20];
   scanf("%s", first_name);
 
-  for (int i = 0; i < SIZE; i++) {
+  for (int i = 0; i < book_capacity; i++) {
     if (!strcmp(phone_book[i].first_name, first_name)) {
       char user[150];
       sprintf(user, "%d) First name : %s\nSecond name : %s\nNumber : %s\n\n",
@@ -110,7 +113,7 @@ void find_user(Person *phone_book) {
 }
 
 void print_users(Person *phone_book) {
-  for (int i = 0; i < SIZE; i++) {
+  for (int i = 0; i < book_capacity; i++) {
     if (phone_book[i].first_name[0] != '\0' ||
         phone_book[i].last_name[0] != '\0' || phone_book[i].number[0] != '\0') {
       char user[150];
@@ -125,7 +128,7 @@ void print_users(Person *phone_book) {
   read(1, &simbol, 1);
 }
 
-int on_clicked_process(Person *phone_book) {
+int on_clicked_process(Person **phone_book) {
   char key;
 
   read(1, &key, 1);
@@ -139,19 +142,19 @@ int on_clicked_process(Person *phone_book) {
 
     case 'd':
       clear_scrin();
-      remove_user(phone_book);
+      remove_user(*phone_book);
       clear_scrin();
       break;
 
     case 'f':
       clear_scrin();
-      find_user(phone_book);
+      find_user(*phone_book);
       clear_scrin();
       break;
 
     case 'p':
       clear_scrin();
-      print_users(phone_book);
+      print_users(*phone_book);
       clear_scrin();
       break;
 

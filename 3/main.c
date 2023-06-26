@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define N 10
+#define N 15
 
 void print_matrix(int matrix[N][N])
 {
