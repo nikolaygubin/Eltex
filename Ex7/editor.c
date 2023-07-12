@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <unistd.h>
+#include <locale.h>
 
 #define ROWS 25
 #define COLS 140
@@ -37,6 +38,8 @@ void sig_winch() {
 }
 
 int main(int argc, char **argv) {
+  setlocale(LC_ALL, "Russian");
+
   if (argc == 1) return 1;
   WINDOW *win_main;
 
@@ -108,6 +111,7 @@ int main(int argc, char **argv) {
 
   int symbol;
   keypad(win_main, TRUE);
+  scroll(win_main);
   while (1) {
     symbol = wgetch(win_main);
     if (symbol == ':') {
@@ -117,12 +121,10 @@ int main(int argc, char **argv) {
       if (symbol == 'q') {
         wprintw(win_main, "q");
         wrefresh(win_main);
-        sleep(1);
         break;
       } else if (symbol == 'r') {
         wprintw(win_main, "r");
         wrefresh(win_main);
-        sleep(1);
         FILE *file = fopen(argv[1], "w");
         for (size_t i = 0; i < ROWS - 5; i++) {
           fwrite(text[i], 1, COLS - 4, file);

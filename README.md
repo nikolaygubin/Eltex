@@ -8,3 +8,4 @@ Ex4 - phone_book
 Ex5 - overflow func
 Ex6 - static/dinamic libs
 Ex7 - text editor
+Ex8 - file explorer
