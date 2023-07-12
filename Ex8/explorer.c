@@ -118,19 +118,16 @@ int main() {
 
         break;
       case KEY_UP:
-        if (BEGIN_FILES != getcury(cur_win))
+        if (BEGIN_FILES != getcury(cur_win)) {
+          wprintw(cur_win, "%s", cur_files[getcury(cur_win) - 4].d_name);
           wmove(cur_win, getcury(cur_win) - 1, 37);
-        // init_pair(3, COLOR_WHITE, COLOR_BLACK);
-        // wattron(left_win, COLOR_PAIR(3));
-        // wprintw(cur_win, "%s", cur_files[getcury(cur_win) - 4].d_name);
-        // wattroff(left_win, COLOR_PAIR(3));
+        }
         break;
       case KEY_DOWN:
-        if ((BEGIN_FILES + (cur_length - 1)) != getcury(cur_win))
+        if ((BEGIN_FILES + (cur_length - 1)) != getcury(cur_win)) {
+          wprintw(cur_win, "%s", cur_files[getcury(cur_win) - 4].d_name);
           wmove(cur_win, getcury(cur_win) + 1, 37);
-        // wattron(right_win, COLOR_PAIR(3));
-        // wprintw(cur_win, "%s", cur_files[getcury(cur_win) - 4].d_name);
-        // wattroff(right_win, COLOR_PAIR(3));
+        }
         break;
       default:
         break;
@@ -199,6 +196,7 @@ int print_window(WINDOW *win, char **path, struct dirent *files) {
     wmove(win, getcury(win) + 1, 37);
     length++;
   }
+  wmove(win, 4, 37);
 
   return length;
 }
