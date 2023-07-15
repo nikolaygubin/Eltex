@@ -10,3 +10,4 @@
 ## Ex7 - text editor
 ## Ex8 - file explorer
 ## Ex9 - create 6 processes in tree
+## Ex10 - pthread begin. Check data race(global var)
