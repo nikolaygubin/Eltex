@@ -102,7 +102,7 @@ int main() {
             strcat(path_to_file, cur_path);
             strcat(path_to_file, "/");
             strcat(path_to_file, cur_files[index].d_name);
-            execl("./../Ex7/editor", "./editor", path_to_file, NULL);
+            execl("./editor", "./editor", path_to_file, NULL);
             free(path_to_file);
             exit(5);
           } else {
