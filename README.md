@@ -13,3 +13,4 @@
 ## Ex10 - pthread begin. Check data race(global var)
 ## Ex11 - shop with threads
 ## Ex12 - canals
+## Ex13 - Test usage queue POSIX and System Five
