@@ -1,14 +1,21 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra 
+CFLAGS = -Wall
 .PHONY : clean
 
-all : main
+all : server client
 
-main : main.o
-	$(CC) $(CFLAGS) -o $@ $^ -lrt
+server : server.o
+	$(CC) $(CFLAGS) -o $@ $^
 
-main.o : main.c
+server.o : server.c
 	$(CC) -c $(CFLAGS) -o $@ $^
 
+client : client.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+client.o : client.c
+	$(CC) -c $(CFLAGS) -o $@ $^
+
+
 clean :
-	rm main *.o
+	rm client server *.o
