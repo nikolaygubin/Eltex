@@ -16,6 +16,11 @@ client : client.o
 client.o : client.c
 	$(CC) -c $(CFLAGS) -o $@ $^
 
+run_server : server
+	./server
+
+run_client : client
+	./client
 
 clean :
 	rm client server *.o

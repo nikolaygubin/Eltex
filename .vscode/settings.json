@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "termios.h": "c",
-        "errno.h": "c"
+        "errno.h": "c",
+        "cstdlib": "c"
     }
 }

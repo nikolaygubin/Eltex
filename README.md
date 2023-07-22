@@ -14,3 +14,5 @@
 ## Ex11 - shop with threads
 ## Ex12 - canals
 ## Ex13 - Test usage queue POSIX and System Five
+## Ex14 - message chat on System V - on queue
+## Ex15 - message chat on System V - on shared memory
