@@ -94,9 +94,11 @@ int main() {
         strcpy(msg_request->mname, "SERVER INFO");
         strcat(msg_request->mtext, "New user! Welcome, ");
         strcat(msg_request->mtext, msg_response->mname);
+        strcat(msg_request->mtext, "\n");
+        msg_request->mtype = MESSAGE_TYPE_STRING;
         semctl(semid_client, 0, SETVAL, count_users);
         printf("New user : %s\n", msg_response->mname);
-        // msg_response->mtype = MESSAGE_TYPE_EMPTY;
+        msg_response->mtype = MESSAGE_TYPE_EMPTY;
         semctl(semid_server, 0, SETVAL, 0);
         continue;
       }
@@ -105,6 +107,7 @@ int main() {
       memset(msg_request->mtext, '\0', 128);
       strcpy(msg_request->mname, msg_response->mname);
       strcpy(msg_request->mtext, msg_response->mtext);
+      msg_request->mtype = MESSAGE_TYPE_STRING;
       semctl(semid_client, 0, SETVAL, count_users);
       printf("%s : %s", msg_response->mname, msg_response->mtext);
 

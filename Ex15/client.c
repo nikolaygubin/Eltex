@@ -3,8 +3,8 @@
 void* listening_msg(void* arg) {
   key_t key_semaphore_client, key_client;
   int semid_client, shmid_client, sem_value;
-  message *msg_request;
-  char *name = (char*)arg;
+  message* msg_request;
+  char* name = (char*)arg;
 
   key_semaphore_client =
       ftok(SEM_NAME_CLIENT, SEM_NUM_CLIENT);  // семафора для клиентта
@@ -39,16 +39,22 @@ void* listening_msg(void* arg) {
 
   while (1) {
     sem_value = semctl(semid_client, 0, GETVAL, 0);
-    printf("%s : %s\n", msg_request->mname, name);
     if (!strcmp(msg_request->mname, name)) {
-      semctl(semid_client, 0, SETVAL, --sem_value);
-      sleep(1);
+      if (msg_request->mtype == MESSAGE_TYPE_STRING) {
+        msg_request->mtype = MESSAGE_TYPE_EMPTY;
+        semctl(semid_client, 0, SETVAL, sem_value - 1);
+        msg_request->mtype = MESSAGE_TYPE_STRING;
+      }
       continue;
     }
-    if (sem_value > 0) {
-      printf("%s : %s\n", msg_request->mname, msg_request->mtext);
-      semctl(semid_client, 0, SETVAL, --sem_value);
-      sleep(1);
+    if (msg_request->mtype == MESSAGE_TYPE_STRING) {
+      if (sem_value > 0) {
+        msg_request->mtype = MESSAGE_TYPE_EMPTY;
+        printf("%s : %s", msg_request->mname, msg_request->mtext);
+        semctl(semid_client, 0, SETVAL, sem_value - 1);
+        msg_request->mtype = MESSAGE_TYPE_STRING;
+        sleep(2);
+      }
     }
   }
 
