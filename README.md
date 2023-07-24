@@ -16,3 +16,4 @@
 ## Ex13 - Test usage queue POSIX and System Five
 ## Ex14 - message chat on System V - on queue
 ## Ex15 - message chat on System V - on shared memory
+## Ex16 - signals
