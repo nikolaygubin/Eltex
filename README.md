@@ -17,3 +17,4 @@
 ## Ex14 - message chat on System V - on queue
 ## Ex15 - message chat on System V - on shared memory
 ## Ex16 - signals
+## Ex17 - sockets begin : af_local af_inet

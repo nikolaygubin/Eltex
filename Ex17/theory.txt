@@ -1,0 +1,85 @@
+Сокеты - механизм межпроцессорного взаимодействия, который позволяет обменяиваться данными между приложениям,
+выполняемыми как локально, так и разных компьютерах, соединённых по сети.
+
+#include <sys/socket.h>
+
+int socket(int domain, int type, int protocol) - создаёт новый сокет
+domain: AF_LOCAL, AF_INET, AF_INET6 ...
+type: SOCK_STREAM - потоковый сокет, SOCK_DGRAM - датаграмный сокет.
+protocol: 0
+ret: файловый дескриптор сокета
+
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) - привязывает сокет к адресу. Обычно он используется сервером для привязки
+сокета к общеизвестному адресу, чтобы клиенты могли его найти.
+sockfd - файловый дескриптор сокета.
+addr - структура адреса привязки сокета. Зависит от домена сокета.
+addrlen - размер в байтах структуры.
+
+struct sockaddr {
+	sa_family_t sa_family;
+	char sa_data[14];
+}
+
+
+
+int listen(int sockfd, int backlog) - позволяет потоковому сокету принимать входящие соединения о других скоетов.
+Нельзя применять если уже была успешно выполнена операция connect или accept. 
+sockfd - файловый дескриптор сокета.
+backlog - количество отложенных соединений(обычно 5)
+
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) - принимает соединение от удалённого приложения в "слущающий" потоковый
+сокет и опционально возвращает адрес удалённого сокета.
+
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) - устанавливает соединение с другим сокетом.
+
+
+strcut sockaddr_un {
+	sa_family_t sun_family;
+	char sun_path[108];
+}
+
+ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+
+ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
+
+ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
+
+
+ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+
+ssize_t sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
+
+ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
+
+struct sockaddr_in {
+	sa_family_t    sin_family; /* address family: AF_INET */
+	in_port_t      sin_port;   /* port in network byte order */
+	struct in_addr sin_addr;   /* internet address */
+};
+
+#include <arpa/inet.h>
+           
+uint32_t htonl(uint32_t hostlong);
+The htonl() function converts the unsigned integer hostlong from host byte order to network byte order.
+
+uint16_t htons(uint16_t hostshort);
+The htons() function converts the unsigned short integer hostshort from host byte order to network byte order.
+
+uint32_t ntohl(uint32_t netlong);
+The ntohl() function converts the unsigned integer netlong from network byte order to host byte order.
+
+uint16_t ntohs(uint16_t netshort);
+The ntohs() function converts the unsigned short integer netshort from network byte order to host byte order.
+
+const char *inet_ntop(int af, const void *src, char *dst, socklen_t size);
+inet_ntop - convert IPv4 and IPv6 addresses from binary to text form 
+af : AF_INET, AF_INET6
+
+int inet_pton(int af, const char *src, void *dst);
+inet_pton - convert IPv4 and IPv6 addresses from text to binary form
+
+#include <netinet/in.h>
+
+int inet_aton(const char *cp, struct in_addr *inp);
+net_aton()  converts the Internet host address cp from the IPv4 numbers-and-dots notation into binary form (in network byte order) and stores it in the structure
+that inp points to.  inet_aton() returns nonzero if the address is valid, zero if not.  The address supplied in cp can have one of the following forms:
