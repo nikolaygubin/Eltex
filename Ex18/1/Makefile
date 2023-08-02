@@ -1,7 +1,7 @@
 .PHONY : clean
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -pthread
 
 all : client server
 
@@ -18,4 +18,3 @@ server.o : server.c
 
 clean :
 	rm client server *.o
-

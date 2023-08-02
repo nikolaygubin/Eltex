@@ -1,9 +1,9 @@
 .PHONY : clean
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -O0 -g -Wall -Werror -Wextra -pthread
 
-all : client server
+all : client server snifer
 
 client : client.o
 	$(CC) $(CFLAGS) -o $@ $<
@@ -15,7 +15,10 @@ server : server.o
 server.o : server.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
+snifer : snifer.o
+	$(CC) $(CFLAGS) -o $@ $<
+snifer.o : snifer.c
+	$(CC) -c $(CFLAGS) -o $@ $<
 
-clean :
-	rm client server *.o
-
+clean:
+	rm snifer client server *.o

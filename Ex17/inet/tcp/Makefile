@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O0 -g -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra
 .PHONY : clean
 
 all : server client

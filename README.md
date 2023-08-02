@@ -18,3 +18,5 @@
 ## Ex15 - message chat on System V - on shared memory
 ## Ex16 - signals
 ## Ex17 - sockets begin : af_local af_inet
+## Ex18 - server shemas : 1 - threads, 2 - pool, 3 - queue with pool, 4 - poll, epoll, select
+## Ex19 - RAW socket : snifer and test raw

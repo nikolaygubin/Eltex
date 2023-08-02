@@ -18,4 +18,3 @@ server.o : server.c
 
 clean :
 	rm client server *.o
-
