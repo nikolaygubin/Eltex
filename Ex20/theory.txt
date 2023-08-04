@@ -1,0 +1,36 @@
+UDP HEADER : 
+#include <netinet/udp.h>
+struct udphdr {
+  uint16_t source; - порт отправителя
+  uint16_t dest; - порт получателя
+  uint16_t len; - длина пакета(включая payload)
+  uint16_t check; - контрольная сумма - выставлять 0.
+};
+
+IP HEADER :
+#include <netinet/ip.h>
+struct iphdr
+{
+  uint8_t tos;
+  uint16_t tot_len;
+  uint16_t id;
+  uint16_t frag_off;
+  uint8_t ttl;
+  uint8_t protocol; - 
+  uint16_t check; - контрольная сумма(выставлять 0)
+  uint32_t saddr; - ip-адрес отправтеля
+  uint32_t daddr; - ip-адрес получателя
+};
+
+int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen);
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+
+level - IPPROTO_IP
+
+IP_HDRINCL (since Linux 2.0)
+If enabled, the user supplies an IP header in front of the user data.  Valid only for SOCK_RAW sockets; see raw(7) for more information.
+When this flag is enabled, the values set by IP_OPTIONS, IP_TTL, and IP_TOS are ignored
+
+
+ETHER HEADER : 
+#include <netinet/ether.h>
