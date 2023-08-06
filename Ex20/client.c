@@ -28,6 +28,8 @@ int main() {
   struct sockaddr_in server_addr;
   socklen_t server_addr_len = sizeof(server_addr);
   struct udphdr *header_udp;
+  struct iphdr *header_ip;
+  int optval = 1;
 
   sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
   if (sockfd == -1) handle_error("socket");
@@ -37,16 +39,32 @@ int main() {
   server_addr.sin_addr.s_addr = inet_addr(IP);
 
   memset(buf, '\0', BUF_SIZE);
-  header_udp = (struct udphdr *)buf;
+  header_udp = (struct udphdr *)(buf + sizeof(struct iphdr));
   header_udp->dest = htons(PORT);
   header_udp->source = htons(CLIENT_PORT);
   header_udp->len = htons(sizeof(struct udphdr) + strlen(msg));
   header_udp->check = 0;
 
+  if (setsockopt(sockfd, IPPROTO_IP, IP_HDRINCL, &optval, sizeof(optval)) == -1)
+    handle_error("setsockopt");
+
+  header_ip = (struct iphdr *)buf;
+  header_ip->version = 4;
+  header_ip->ihl = 5;
+  header_ip->protocol = IPPROTO_UDP;
+  header_ip->check = 0;
+  header_ip->tot_len = sizeof(struct iphdr);
+  header_ip->frag_off = 0;
+  header_ip->ttl = 255;
+  header_ip->tos = 0;
+  header_ip->id = 0;
+  header_ip->saddr = inet_addr(IP);
+  header_ip->daddr = inet_addr(IP);
+
   if (connect(sockfd, (struct sockaddr *)&server_addr, server_addr_len) == -1)
     handle_error("connect");
 
-  memmove(buf + 8, msg, strlen(msg));
+  memmove(buf + sizeof(struct udphdr) + sizeof(struct iphdr), msg, strlen(msg));
   if (sendto(sockfd, buf, BUF_SIZE, 0, (struct sockaddr *)&server_addr,
              server_addr_len) == -1)
     handle_error("sendto");
@@ -60,7 +78,8 @@ int main() {
     if (header_udp->dest == htons(CLIENT_PORT)) break;
   }
 
-  printf("message from server : %s\n", buf + sizeof(struct udphdr) + sizeof(struct iphdr));
+  printf("message from server : %s\n",
+         buf + sizeof(struct udphdr) + sizeof(struct iphdr));
 
   close(sockfd);
 
