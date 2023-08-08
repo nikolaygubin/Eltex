@@ -11,12 +11,14 @@ IP HEADER :
 #include <netinet/ip.h>
 struct iphdr
 {
-  uint8_t tos;
-  uint16_t tot_len;
-  uint16_t id;
-  uint16_t frag_off;
-  uint8_t ttl;
-  uint8_t protocol; - 
+  unsigned int version:4; - версия ip (4 или 6)
+  unsigned int ihl:4; - длина заголовка в 32 битных словах - минимум 5(5*4 = 20 байт)
+  uint8_t tos; - DSCP и EC, ставить в 0
+  uint16_t tot_len; - итоговая длина
+  uint16_t id; - идентификатор, ставить в 0
+  uint16_t frag_off - сдвиг, ставить в 0;
+  uint8_t ttl; - time to live, ставить в 0, макс значение 255
+  uint8_t protocol; - IPPROTO_UDP / _TCP
   uint16_t check; - контрольная сумма(выставлять 0)
   uint32_t saddr; - ip-адрес отправтеля
   uint32_t daddr; - ip-адрес получателя
@@ -33,4 +35,22 @@ When this flag is enabled, the values set by IP_OPTIONS, IP_TTL, and IP_TOS are 
 
 
 ETHER HEADER : 
-#include <netinet/ether.h>
+#include <linux/if_packet>
+#include <linux/if_ether>
+packet_socket = socket(AF_PACKET, int socket_type, int protocol);
+
+struct sockaddr_ll {
+    unsigned short  sll_family;    /* Всегда AF_PACKET */
+    unsigned short  sll_protocol;  /* Протокол физического уровня */
+    int             sll_ifindex;   /* Hомер интерфейса */
+    unsigned short  sll_hatype;    /* Тип заголовка */
+    unsigned char   sll_pkttype;   /* Тип пакета */
+    unsigned char   sll_halen;     /* Длина адреса */ 
+    unsigned char   sll_addr[8];   /* Адрес физического уровня */
+};
+
+struct ethhdr {
+	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/
+	unsigned char	h_source[ETH_ALEN];	/* source ether addr	*/
+	__be16		h_proto;		/* packet type ID field	*/
+} __attribute__((packed));

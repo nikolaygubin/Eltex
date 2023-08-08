@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define IP "127.0.0.2"
 #define PORT 8080
 #define BUF_SIZE 256
 
@@ -16,7 +15,12 @@
     exit(EXIT_FAILURE);   \
   } while (0);
 
-int main() {
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    printf("Usage : ./server ip_address");
+    exit(EXIT_FAILURE);
+  }
+
   int sockfd;
   char buf[BUF_SIZE];
   struct sockaddr_in server_addr, client_addr;
@@ -28,11 +32,10 @@ int main() {
 
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(PORT);
-  server_addr.sin_addr.s_addr = inet_addr(IP);
+  server_addr.sin_addr.s_addr = inet_addr(argv[1]);
 
   if (bind(sockfd, (struct sockaddr *)&server_addr, server_addr_size) == -1)
     handle_error("bind");
-
 
   if (recvfrom(sockfd, buf, BUF_SIZE, 0, (struct sockaddr *)&client_addr,
                &client_addr_size) == -1)

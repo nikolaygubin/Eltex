@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define IP "127.0.0.2"
+#define IP "127.0.0.1"
 #define PORT 8080
 #define CLIENT_PORT 7777
 #define BUF_SIZE 256
@@ -51,13 +51,13 @@ int main() {
   header_ip = (struct iphdr *)buf;
   header_ip->version = 4;
   header_ip->ihl = 5;
-  header_ip->protocol = IPPROTO_UDP;
-  header_ip->check = 0;
+  header_ip->tos = 0;
   header_ip->tot_len = sizeof(struct iphdr);
+  header_ip->id = 0;
   header_ip->frag_off = 0;
   header_ip->ttl = 255;
-  header_ip->tos = 0;
-  header_ip->id = 0;
+  header_ip->protocol = IPPROTO_UDP;
+  header_ip->check = 0;
   header_ip->saddr = inet_addr(IP);
   header_ip->daddr = inet_addr(IP);
 
@@ -75,7 +75,7 @@ int main() {
                  &server_addr_len) == -1)
       handle_error("recvfrom");
     header_udp = (struct udphdr *)(buf + 20);
-    if (header_udp->dest == htons(CLIENT_PORT)) break;
+    if (header_udp->dest == htons(PORT)) break;
   }
 
   printf("message from server : %s\n",
