@@ -1,0 +1,17 @@
+Виды передачи данных
+
+unicast - передача посылки от пользователя к конкретному пользователю
+
+broadcast - передача посылки осуществляется широковещательно, то есть всем участникам локальной сети
+
+multicast - посылка доставляется группе пользователей локальной сети. Адреса, 
+зарезервированные под multicast : 224.0.0.0 - 239.255.255.255
+struct ip_mreqn {
+    struct in_addr imr_multiaddr; /* IP multicast group
+                                     address */
+    struct in_addr imr_address;   /* IP address of local
+                                     interface */
+    int            imr_ifindex;   /* interface index */
+};
+
+anycast - посылка доставляется любому пользователю из группы
