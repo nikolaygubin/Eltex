@@ -22,3 +22,4 @@
 ## Ex19 - RAW socket : snifer
 ## Ex20 - RAW socket : UDP headers(transport & network & link)
 ## Ex21 - types data transfer : broadcast, multicast
+## Ex22 - kernel assembly
