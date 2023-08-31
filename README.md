@@ -18,8 +18,9 @@
 ## Ex15 - message chat on System V - on shared memory
 ## Ex16 - signals
 ## Ex17 - sockets begin : af_local af_inet
-## Ex18 - server shemas : 1 - threads, 2 - pool, 3 - queue with pool, 4 - poll, epoll, select
+## Ex18 - server shemas : 1 - threads, 2 - pool, 3 - queue with pool
 ## Ex19 - RAW socket : snifer
 ## Ex20 - RAW socket : UDP headers(transport & network & link)
 ## Ex21 - types data transfer : broadcast, multicast
 ## Ex22 - kernel assembly
+## Ex23 - modules
